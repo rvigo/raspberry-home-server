@@ -1,0 +1,101 @@
+services:
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=995
+      - PGID=1002
+      - TZ=America/Sao_Paulo
+      - UMASK=002
+      - WEBUI_PORT=8080
+    ports:
+      - 8080:8080
+    volumes:
+      - /mnt/shared/.docker/volumes/qbittorrent_data:/config:rw
+      - /mnt/shared/media/downloads:/downloads:rw
+    networks:
+      - torrent
+    restart: unless-stopped
+  jackett:
+    image: linuxserver/jackett:latest
+    container_name: jackett
+    environment:
+      - PUID=994
+      - PGID=1002
+    ports:
+      - 9117:9117
+    volumes:
+      - /mnt/shared/.docker/volumes/jackett_data:/config:rw
+      - /mnt/shared/media/downloads:/downloads:rw
+    restart: unless-stopped
+    networks:
+      - torrent
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=993
+      - PGID=1002
+    ports:
+      - 7878:7878
+    volumes:
+      - /mnt/shared/media/Movies:/movies:rw
+      - /mnt/shared/media/downloads:/downloads:rw
+      - /mnt/shared/.docker/volumes/radarr_data:/config:rw
+    restart: unless-stopped
+    networks:
+      - torrent
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=998
+      - PGID=1002
+      - TZ=America/Sao_Paulo
+      - UMASK=002
+    ports:
+      - 8989:8989
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/shared/.docker/volumes/sonarr_data:/config:rw
+      - /mnt/shared/.docker/volumes/sonarr_data:/dev/rtc:rw
+      - /mnt/shared/media/downloads:/downloads:rw
+      - /mnt/shared/media/TV Shows:/tv:rw
+      - /mnt/shared/media/Movies:/movies:rw
+    restart: unless-stopped
+    networks:
+      - torrent
+  bazarr:
+    image: linuxserver/bazarr
+    container_name: bazarr
+    environment:
+      - PUID=997
+      - PGID=1002
+      - TZ=America/Sao_Paulo
+      - UMASK=002
+    ports:
+      - 6767:6767
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /mnt/shared/.docker/volumes/bazarr_data:/config:rw
+      - /mnt/shared/media/downloads:/downloads:rw
+      - /mnt/shared/media:/media:rw
+    restart: unless-stopped
+    networks:
+      - torrent
+  plex:
+    container_name: plex
+    image: linuxserver/plex:latest
+    privileged: true
+    environment:
+      PGID: "1002"
+      PUID: "999"
+      VERSION: docker
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /mnt/shared/.docker/volumes/plex_data:/config:rw
+      - /mnt/shared/media:/media:rw
+networks:
+  torrent:
+    driver: bridge

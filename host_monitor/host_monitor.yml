@@ -1,0 +1,69 @@
+services:
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-clock-panel,grafana-simple-json-datasource
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=adminadmin
+    volumes:
+      - grafana-data:/var/lib/grafana:rw
+
+  prometheus:
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    container_name: prometheus
+    expose:
+      - 9090
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    volumes:
+      - prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+      - prometheus-data:/etc/prometheus/
+    depends_on:
+      - cadvisor
+  cadvisor:
+    image: zcube/cadvisor:latest
+    container_name: cadvisor
+    devices:
+      - /dev/kmsg
+    expose:
+      - 8080
+    ipc: shareable
+    privileged: true
+    restart: unless-stopped
+    command:
+      - "--housekeeping_interval=10s"
+      - "--docker_only=true"
+    security_opt:
+      - label=disable
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:r0
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/:/dev/:ro
+      - /sys/fs/cgroup:/cgroup:ro
+  node-exporter:
+    container_name: node-exporter
+    expose:
+      - 9100
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/host:ro,rslave
+    image: prom/node-exporter:latest
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/host"
+    restart: unless-stopped
+
+volumes:
+  grafana-data:
+  prometheus-data:
