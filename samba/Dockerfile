@@ -10,6 +10,7 @@ RUN apk --update --no-cache add \
     && rm -rf /var/cache/apk/*
 
 COPY smb.conf /etc/samba/smb.conf
+COPY add_user.sh /utils/add_user.sh
 
 EXPOSE 137/udp 138/udp 139/tcp 445/tcp
 
