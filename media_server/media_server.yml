@@ -1,3 +1,4 @@
+version: "3"
 services:
   qbittorrent:
     image: linuxserver/qbittorrent:latest
@@ -16,6 +17,7 @@ services:
     networks:
       - torrent
     restart: unless-stopped
+
   jackett:
     image: linuxserver/jackett:latest
     container_name: jackett
@@ -30,6 +32,7 @@ services:
     restart: unless-stopped
     networks:
       - torrent
+
   radarr:
     image: linuxserver/radarr:latest
     container_name: radarr
@@ -45,6 +48,7 @@ services:
     restart: unless-stopped
     networks:
       - torrent
+
   sonarr:
     image: linuxserver/sonarr:latest
     container_name: sonarr
@@ -65,6 +69,7 @@ services:
     restart: unless-stopped
     networks:
       - torrent
+
   bazarr:
     image: linuxserver/bazarr
     container_name: bazarr
@@ -83,6 +88,7 @@ services:
     restart: unless-stopped
     networks:
       - torrent
+      
   plex:
     container_name: plex
     image: linuxserver/plex:latest
