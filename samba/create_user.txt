@@ -1,2 +1,2 @@
-docker exec -it samba adduser -s /sbin/nologin -h /home/${USER_NAME} -H -D ${USER_NAME}
+docker exec -it samba adduser -u ${HOST_USER_ID} -s /sbin/nologin -h /home/${USER_NAME} -H -D ${USER_NAME}
 docker exec -it samba smbpasswd -a ${USER_NAME}

@@ -14,7 +14,6 @@ COPY add_user.sh /utils/add_user.sh
 
 EXPOSE 137/udp 138/udp 139/tcp 445/tcp
 
-VOLUME [ "/data" ]
 VOLUME [ "/shared" ]
 VOLUME [ "/media" ]
 
