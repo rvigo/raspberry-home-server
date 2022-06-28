@@ -34,7 +34,8 @@ services:
       - cadvisor
 
   cadvisor:
-    image: zcube/cadvisor:latest
+    build:
+      context: ./cadvisor
     container_name: cadvisor
     devices:
       - /dev/kmsg
