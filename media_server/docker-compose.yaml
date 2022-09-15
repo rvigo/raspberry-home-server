@@ -88,7 +88,7 @@ services:
     restart: unless-stopped
     networks:
       - torrent
-      
+
   plex:
     container_name: plex
     image: linuxserver/plex:latest

@@ -37,6 +37,7 @@ services:
     build:
       context: ./cadvisor
     container_name: cadvisor
+    image: cadvisor
     devices:
       - /dev/kmsg
     expose:
